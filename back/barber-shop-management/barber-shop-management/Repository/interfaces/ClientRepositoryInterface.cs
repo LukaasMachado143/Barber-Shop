@@ -1,4 +1,6 @@
-﻿namespace barber_shop_management.Models
+﻿using barber_shop_management.Models;
+
+namespace barber_shop_management.Repository.interfaces
 {
     public interface IClientRepository
     {

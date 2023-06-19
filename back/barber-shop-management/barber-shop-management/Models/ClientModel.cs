@@ -1,8 +1,11 @@
-﻿namespace barber_shop_management.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace barber_shop_management.Models
 {
     public class ClientModel
     {
 
+        [Key]
         public Guid Id { get; set; }
         public string name { get; set; }
         public string birthDate { get; set; }
