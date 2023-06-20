@@ -47,9 +47,11 @@
 
 
 <script>
+import PasswordEncoder from "@/utils/password-encoder.js";
 export default {
   data() {
     return {
+      encoder: new PasswordEncoder(),
       email: null,
       password: null,
       showPassword: false,
@@ -76,19 +78,40 @@ export default {
         return false;
       }
     },
-    buildRequest() {
-      let request = {
-        email: this.email,
-        password: this.password,
-      };
-      return request;
+    encoderPassword(password) {
+      return this.encoder
+        .encodingPassword(password)
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          console.log("Erro do codificador: ", error);
+          throw error;
+        });
     },
+    buildRequest() {
+      return this.encoderPassword(this.password)
+        .then((hashedPassword) => {
+          let request = {
+            email: this.email,
+            password: hashedPassword,
+          };
+          return request;
+        })
+        .catch((error) => {
+          console.error("Erro ao criar requisição:", error);
+          throw error;
+        });
+    },    
     login() {
       if (this.email && this.password && this.verifyEmail(this.email)) {
-        console.log(
-          "requisição montada para enviar ao back: ",
-          this.buildRequest()
-        );
+        this.buildRequest()
+          .then((request) => {
+            console.log("Requisição montada para enviar ao back:", request);
+          })
+          .catch((error) => {
+            console.error("Erro ao montar a requisição:", error);
+          });
       } else {
         alert("Email ou senha incorreto...");
       }
